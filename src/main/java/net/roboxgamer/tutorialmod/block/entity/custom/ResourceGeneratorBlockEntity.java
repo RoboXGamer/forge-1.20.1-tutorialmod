@@ -8,7 +8,9 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +24,16 @@ import net.roboxgamer.tutorialmod.block.entity.ModBlockEntities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ResourceGeneratorBlockEntity extends BlockEntity {
+  private ArrayList<Item> WHITELIST_ITEMS = new ArrayList<>(
+      Arrays.asList(
+          Items.IRON_INGOT,
+          Items.GOLD_INGOT
+          )
+  );
   private int tc = 0;
   
   private int addedCount = 0;
@@ -52,6 +63,16 @@ public class ResourceGeneratorBlockEntity extends BlockEntity {
     @Override
     public int getSlotLimit(int slot) {
       return 1;
+    }
+    
+    @Override
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+      for (Item item : WHITELIST_ITEMS) {
+        if (stack.getItem() == item) {
+          return true;
+        }
+      }
+      return false;
     }
   };
   
