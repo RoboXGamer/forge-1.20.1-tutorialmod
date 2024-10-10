@@ -2,8 +2,10 @@ package net.roboxgamer.tutorialmod.block.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -13,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.ItemStackHandler;
 import net.roboxgamer.tutorialmod.block.entity.custom.ResourceGeneratorBlockEntity;
@@ -66,5 +69,17 @@ public class ResourceGeneratorBlock extends Block implements EntityBlock {
       }
     }
     return InteractionResult.sidedSuccess(level.isClientSide());
+  }
+  
+  @Override
+  public void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean movedByPiston) {
+    if (!state.is(newState.getBlock())) {
+      BlockEntity be = level.getBlockEntity(pos);
+      if (be instanceof ResourceGeneratorBlockEntity blockEntity) {
+        SimpleContainer inv = blockEntity.getInvContainer();
+        Containers.dropContents(level, pos, inv);
+      }
+    }
+    super.onRemove(state, level, pos, newState, movedByPiston);
   }
 }
