@@ -3,6 +3,7 @@ package net.roboxgamer.tutorialmod.block;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -10,6 +11,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.roboxgamer.tutorialmod.block.custom.MiniChestBlock;
 import net.roboxgamer.tutorialmod.block.custom.ResourceGeneratorBlock;
 import net.roboxgamer.tutorialmod.item.ModItems;
 
@@ -22,6 +24,11 @@ public class ModBlocks {
   
   public static final RegistryObject<ResourceGeneratorBlock> RESOURCE_GENERATOR_BLOCK = registerBlock("resource_generator_block", ()->
       new ResourceGeneratorBlock(BlockBehaviour.Properties.of().sound(SoundType.AMETHYST).strength(1.0F, 1.0F)));
+  
+  public static final RegistryObject<MiniChestBlock> MINI_CHEST_BLOCK = registerBlock(
+      "mini_chest_block", ()->
+          new MiniChestBlock(BlockBehaviour.Properties.copy(Blocks.CHEST))
+  );
   
   public static final RegistryObject<Block> EXAMPLE_BLOCK = registerBlock(
       "example_block",

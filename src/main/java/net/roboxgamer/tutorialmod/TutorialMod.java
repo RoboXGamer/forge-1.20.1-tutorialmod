@@ -2,16 +2,11 @@ package net.roboxgamer.tutorialmod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -29,7 +24,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.roboxgamer.tutorialmod.block.ModBlocks;
 import net.roboxgamer.tutorialmod.block.entity.ModBlockEntities;
+import net.roboxgamer.tutorialmod.client.screen.MiniChestScreen;
 import net.roboxgamer.tutorialmod.item.ModItems;
+import net.roboxgamer.tutorialmod.menu.ModMenus;
 import org.slf4j.Logger;
 
 import static net.roboxgamer.tutorialmod.item.ModItems.EXAMPLE_ITEM;
@@ -67,6 +64,8 @@ public class TutorialMod
         ModItems.register(modEventBus);
         
         ModBlockEntities.register(modEventBus);
+        
+        ModMenus.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
 
@@ -75,12 +74,23 @@ public class TutorialMod
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
+        modEventBus.addListener(this::clientSetup);
         
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
-
-    private void commonSetup(final FMLCommonSetupEvent event)
+  
+  private void clientSetup(FMLClientSetupEvent  event) {
+    event.enqueueWork(
+        () -> MenuScreens.register(ModMenus.MINI_CHEST_MENU.get(), MiniChestScreen::new)
+    );
+  }
+  
+  public static ResourceLocation location(String path) {
+    return new ResourceLocation(MODID, path);
+  }
+  
+  private void commonSetup(final FMLCommonSetupEvent event)
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
     }
